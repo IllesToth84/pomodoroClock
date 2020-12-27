@@ -1,81 +1,117 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const stateContainer = document.querySelector('#state');
+  const timeContainer = document.querySelector('#time');
+  const breakContainer = document.querySelector('#break-length');
+  const sessionContainer = document.querySelector('#session-length');
+  let currentState = 'session'; // session or break
+  let breakTime = 5 * 60;
+  let sessionTime = 25 * 60;
+  let timer = sessionTime;
+  let interval = null;
 
-function incrementBreak() {
-    let breakLength = document.getElementById("break-length");
-    if (parseFloat(breakLength.innerText) < 60) {
-        breakLength.innerText = parseFloat(breakLength.innerText) + 1;
-    }
-};
+  renderTime();
+  renderBreak();
+  renderSession();
 
-function decrementBreak() {
-    let breakLength = document.getElementById("break-length");
-    if (parseFloat(breakLength.innerText) > 0) {
-        breakLength.innerText = parseFloat(breakLength.innerText) - 1;
-    }
-};
-
-function incrementSession() {
-    let sessionLength = document.getElementById("session-length");
-    if (parseFloat(sessionLength.innerText) < 60) { 
-    let incrementSessionValue = parseFloat(sessionLength.innerText) + 1;
-    sessionLength.innerText =  incrementSessionValue;
-    document.getElementById("time").innerText = incrementSessionValue + ":00";
-}
-};
-
-function decrementSession() {
-    let sessionLength = document.getElementById("session-length");
-    if (parseFloat(sessionLength.innerText) > 0) {
-    let decrementSessionValue = parseFloat(sessionLength.innerText) - 1;
-    sessionLength.innerText =  decrementSessionValue;
-    var defaultMinutes = ":00";
-    document.getElementById("time").innerText = decrementSessionValue + defaultMinutes;
-}
-};
-
-
-
-function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
-    let sessionLengthValue = document.getElementById("session-length").innerText;
-    var actualSessionValue = document.getElementById("time").innerText.slice(0,2);
-    console.log(sessionLengthValue);
-    console.log(actualSessionValue);
-
-function setInt() {    
-    setInterval(function () {
-        minutes = parseInt(timer / 60, 10)
-        seconds = parseInt(timer % 60, 10);
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        display.textContent = minutes + ":" + seconds;
-
-        if (--timer < 0) {
-            timer = duration;
+  function startTimer() {
+    interval = setInterval(() => {
+      if (timer > 0) {
+        --timer;
+      } else {
+        if (currentState === 'session') {
+          timer = breakTime;
+          currentState = 'break';
+        } else {
+          timer = sessionTime;
+          currentState = 'session';
         }
-    }, 1000 
-    )};
 
-    if (actualSessionValue == sessionLengthValue) { 
-        setInt();   
-     } else {
-        clearInterval(setInt);
+        clearInterval(interval);
+        interval = null;
+      }
+
+      renderTime();
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(interval);
+    interval = null;
+  }
+
+  function toggleTimer() {
+    if (interval) {
+      stopTimer();
+    } else {
+      startTimer();
     }
-};
+  }
 
-function toggleClockOnOrOff() {
-    var actualSessionValue = document.getElementById("time").innerText.slice(0,2);
-    console.log(actualSessionValue);
-    var sessionMinutes = 60 * actualSessionValue,
-    display = document.querySelector('#time');
-    startTimer(sessionMinutes, display);
-};
+  function reset() {
+    timer = sessionTime;
+    renderTime();
+  }
 
-function resetClock() {
-    
-    document.getElementById("break-length").innerText = "5";
-    document.getElementById("session-length").innerText = "25";
-    document.getElementById("time").innerText = "25:00";
-}
- 
+  function incrementBreak() {
+    breakTime += 60;
+    renderBreak();
+  }
+
+  function decrementBreak() {
+    if (breakTime <= 1) return;
+    breakTime -= 60;
+    renderBreak();
+  }
+
+  function incrementSession() {
+    sessionTime += 60;
+    renderSession();
+    if (!interval) {
+      timer = sessionTime;
+      renderTime();
+    }
+  }
+
+  function decrementSession() {
+    if (sessionTime <= 1) return;
+    sessionTime -= 60;
+    renderSession();
+    if (!interval) {
+      timer = sessionTime;
+      renderTime();
+    }
+  }
+
+  function renderBreak() {
+    breakContainer.innerHTML = breakTime / 60;
+  }
+
+  function renderSession() {
+    sessionContainer.innerHTML = sessionTime / 60;
+  }
+
+  function renderTime() {
+    let minutes = Math.floor(timer / 60);
+    minutes = minutes > 10 ? minutes : `0${minutes}`;
+    let seconds = timer % 60;
+    seconds = seconds > 10 ? seconds : `0${seconds}`;
+
+    stateContainer.innerHTML = currentState;
+    timeContainer.innerHTML = `${minutes}:${seconds}`;
+  }
+
+  document
+    .querySelector('#break-decrement')
+    .addEventListener('click', decrementBreak);
+  document
+    .querySelector('#break-increment')
+    .addEventListener('click', incrementBreak);
+  document
+    .querySelector('#session-decrement')
+    .addEventListener('click', decrementSession);
+  document
+    .querySelector('#session-increment')
+    .addEventListener('click', incrementSession);
+  document.querySelector('#start-stop').addEventListener('click', toggleTimer);
+  document.querySelector('#reset').addEventListener('click', reset);
+});
