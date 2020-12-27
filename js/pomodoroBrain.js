@@ -33,8 +33,15 @@ function decrementSession() {
 };
 
 
+
 function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
+    let sessionLengthValue = document.getElementById("session-length").innerText;
+    var actualSessionValue = document.getElementById("time").innerText.slice(0,2);
+    console.log(sessionLengthValue);
+    console.log(actualSessionValue);
+
+function setInt() {    
     setInterval(function () {
         minutes = parseInt(timer / 60, 10)
         seconds = parseInt(timer % 60, 10);
@@ -47,8 +54,15 @@ function startTimer(duration, display) {
         if (--timer < 0) {
             timer = duration;
         }
-    }, 1000);
-}
+    }, 1000 
+    )};
+
+    if (actualSessionValue == sessionLengthValue) { 
+        setInt();   
+     } else {
+        clearInterval(setInt);
+    }
+};
 
 function toggleClockOnOrOff() {
     var actualSessionValue = document.getElementById("time").innerText.slice(0,2);
@@ -59,7 +73,7 @@ function toggleClockOnOrOff() {
 };
 
 function resetClock() {
- 
+    
     document.getElementById("break-length").innerText = "5";
     document.getElementById("session-length").innerText = "25";
     document.getElementById("time").innerText = "25:00";
