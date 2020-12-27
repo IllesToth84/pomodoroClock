@@ -25,13 +25,12 @@
                 <h2>Break Length</h2>
             </div>
             <div id="break-length">
-               5
             </div>
             <div class="btn-block">
-                <button id="break-decrement" class="btn form-control btn-outline-primary my-1" onclick="decrementBreak()">
+                <button id="break-decrement" class="btn form-control btn-outline-primary my-1">
                     Less Break
                 </button>
-                <button id="break-increment" class="btn form-control btn-outline-success my-1" onclick="incrementBreak()">
+                <button id="break-increment" class="btn form-control btn-outline-success my-1">
                     More Break
                 </button>
             </div>
@@ -42,12 +41,11 @@
                 <h2>Session length</h2>
             </div>
             <div id="session-length">
-                25
             </div>
-            <button id="session-decrement" class="btn form-control btn-outline-primary my-1" onclick="decrementSession()">
+            <button id="session-decrement" class="btn form-control btn-outline-primary my-1">
                 Less Session
             </button>
-            <button id="session-increment" class="btn form-control btn-outline-success my-1" onclick="incrementSession()">
+            <button id="session-increment" class="btn form-control btn-outline-success my-1">
                 More Session
             </button>
         </div>
@@ -61,16 +59,17 @@
                         </div>
                     </h5>
                     <p class="cart-text">
+                        <div id="state"></div>
                         <div id="time-left">
-                            <span id="time">25:00</span>
+                            <span id="time"></span>
                         </div>
                     </p>
                     <div class="row">
                         <div class="col">
-                            <button href="#" id="start-stop" class="btn btn-outline-primary form-control" onclick="toggleClockOnOrOff()">Start/Stop</button>
+                            <button href="#" id="start-stop" class="btn btn-outline-primary form-control">Start/Stop</button>
                         </div>
                         <div class="col">
-                            <button href="#" id="reset" class="btn btn-outline-danger form-control" onclick="resetClock()">Reset</button>
+                            <button href="#" id="reset" class="btn btn-outline-danger form-control">Reset</button>
                         </div>
                     </div>
                 </div>
